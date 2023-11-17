@@ -1,12 +1,12 @@
 import { createEffect, createSignal, onCleanup } from "solid-js";
 import { Timers } from "./@types";
 import { convertToLocaleTime, remainingTime } from "./utils";
-import alarmSoundUrl from './assets/alarm-sound.mp3';
-import blankSoundUrl from './assets/blank-sound.mp3';
+import alarmSoundUrl from "./assets/alarm-sound.mp3";
+import blankSoundUrl from "./assets/blank-sound.mp3";
 
 const blankSound = new Audio(blankSoundUrl);
-const alarmSound = new Audio(alarmSoundUrl)
-alarmSound.loop = true
+const alarmSound = new Audio(alarmSoundUrl);
+alarmSound.loop = true;
 
 function App() {
   const [timers, setTimers] = createSignal<Timers>({
@@ -19,15 +19,18 @@ function App() {
 
   const timerInterval = setInterval(() => {
     setTimers((previous) => ({ ...previous, currentTime: Date.now() }));
-    if (!isAlarmActive()) return
+    if (!isAlarmActive()) return;
     if (timers().currentTime > timers().alarmTime) {
       alarmSound.play();
     }
   }, 1000);
 
-  const blankSoundInterval = setInterval(() => {
-    blankSound.play();
-  }, 1000 * 60 * 4)
+  const blankSoundInterval = setInterval(
+    () => {
+      blankSound.play();
+    },
+    1000 * 60 * 4
+  );
 
   onCleanup(() => {
     clearInterval(timerInterval);
@@ -48,20 +51,21 @@ function App() {
         onInput={(e) => {
           const toNumber = new Date(e.currentTarget.value).getTime();
 
-            setTimers((previous) => ({ ...previous, alarmTime: toNumber }));
+          setTimers((previous) => ({ ...previous, alarmTime: toNumber }));
         }}
       />
       <button
         style={{
           "background-color": isAlarmActive() ? "lightblue" : "",
         }}
-        onClick={() => setIsAlarmActive((previous) => !previous)}
+        onClick={() => {
+          setIsAlarmActive((previous) => !previous);
+          alarmSound.pause();
+        }}
       >
         Activate{isAlarmActive() ? "d" : ""}
       </button>
-<button
-  onClick={() => alarmSound.pause()}
->Pause</button>
+      <button onClick={() => alarmSound.pause()}>Pause</button>
 
       {timers().alarmTime !== 0 && <div>{remainingTime(timers)}</div>}
     </section>

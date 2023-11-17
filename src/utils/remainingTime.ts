@@ -19,5 +19,5 @@ export const remainingTime = (timers: Accessor<Timers>) => {
 
   const formattedString = `${displayHours}:${displayMinutes}:${displaySeconds} to go`;
 
-  return remainingMilliseconds > 0 ? formattedString : 'set new alarm';
+  return remainingMilliseconds > 0 ? formattedString : "set new alarm";
 };
